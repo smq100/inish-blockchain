@@ -1,0 +1,45 @@
+# Output directories
+__pycache__
+
+# Other directories
+venv
+*._*
+.ipynb_checkpoints
+.pylintrc
+
+# Other file types
+*.code-workspace
+*.sqlite*
+*.pyc
+*.ini
+*.txt
+*.log
+*.pickle
+*.session.*
+*.png
+*.bak
+*.xlsx
+*.csv
+*.db
+.DS_Store
+
+# Node dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Node testing
+coverage
+
+# Node production
+build
+
+# Node misc
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
