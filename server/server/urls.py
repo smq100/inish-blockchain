@@ -7,6 +7,7 @@ from blockchain.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url('^$', views.server_root, name="server"),
     url('^get_chain$', views.get_chain, name="get_chain"),
     url('^mine_block$', views.mine_block, name="mine_block"),
     url('^add_transaction$', views.add_transaction, name="add_transaction"),
