@@ -22,7 +22,7 @@ class Transactions extends Component {
     render() {
         return (
             <Container>
-                <h3><b>Transactions</b></h3>
+                <h3 className="text-muted mt-20"><b>Transactions</b></h3>
                 <Table responsive>
                     <thead>
                         <tr>

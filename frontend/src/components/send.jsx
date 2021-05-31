@@ -23,9 +23,11 @@ class Send extends Component {
     handleRecipient(event) {
         this.setState({ recipient: event.target.value });
     }
+
     handleAmount(event) {
         this.setState({ amount: event.target.value });
     }
+
     componentDidMount() {
         axios.get(getEndpoint)
             .then(res => {
@@ -53,31 +55,24 @@ class Send extends Component {
         return (
             <Container>
                 <br />
-                <h3><b>SudoCoin</b></h3>
-                <h4><b style={{ color: '#007bff' }}>Send dummy crypto to anyone.</b> </h4>
+                <h3 className="text-muted"><b>SudoCoin</b></h3>
+                <h5 className="text-muted mb-4"><b>Send dummy crypto to anyone</b> </h5>
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group as={Row}>
-                        <Form.Label column sm="2">
-                            Recipient
-                 </Form.Label>
-                        <Col sm="8">
-                            <Form.Control onChange={this.handleRecipient} value={this.state.recipient} placeholder="Enter Recipient Address" />
+                        <Form.Label column sm="1">Recipient</Form.Label>
+                        <Col sm="0">
+                            <Form.Control onChange={this.handleRecipient} value={this.state.recipient} placeholder="Recipient Address" />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row}>
-                        <Form.Label column sm="2">
-                            Amount
-                </Form.Label>
-                        <Col sm="2">
+                        <Form.Label column sm="1">Amount</Form.Label>
+                        <Col sm="0">
                             <Form.Control onChange={this.handleAmount} placeholder="Amount" value={this.state.amount} />
                         </Col>
-                        <Col sm="0.5"><b> Sudo </b></Col>
                     </Form.Group>
                     <Form.Group as={Row}>
-                        <Col sm="5">
-                            <Button variant="primary" type="submit">
-                                Send
-    </Button>
+                        <Col>
+                            <Button variant="primary mt-4" type="submit">Send</Button>
                         </Col>
                     </Form.Group>
                 </Form>

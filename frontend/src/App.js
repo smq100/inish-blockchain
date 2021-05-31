@@ -23,8 +23,8 @@ class App extends Component {
             <div className="App">
                 <Status />
                 <Send />
-                <Blocks />
                 <Transactions />
+                <Blocks />
             </div>
         );
     }
