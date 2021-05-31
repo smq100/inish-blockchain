@@ -12,9 +12,7 @@ const endpoint = '/mine_block'
 class App extends Component {
     constructor(props) {
         super(props);
-    }
 
-    componentWillMount() {
         axios.get(endpoint)
     }
 

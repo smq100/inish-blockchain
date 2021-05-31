@@ -12,6 +12,7 @@ class Transactions extends Component {
             chain: [],
         }
     }
+
     componentDidMount() {
         axios.get(endpoint)
             .then(res => {
@@ -19,6 +20,7 @@ class Transactions extends Component {
                 this.setState({ chain });
             })
     }
+
     render() {
         return (
             <Container>
@@ -33,11 +35,11 @@ class Transactions extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.chain.slice(0).reverse().map(chain =>
-                            chain.transactions.map(t =>
-                                <tr key={t}>
-                                    <td><b style={{ color: '#007bff' }}>0x{t.sender.toString().slice(0,6)}...{t.sender.toString().slice(-6)}</b></td>
-                                    <td><b style={{ color: '#007bff' }}>0x{t.receiver.toString().slice(0,6)}...{t.receiver.toString().slice(-6)}</b></td>
+                        {this.state.chain.slice(0).reverse().map((chain, idx1) =>
+                            chain.transactions.map((t, idx2) =>
+                                <tr key={idx2}>
+                                    <td><b style={{ color: '#007bff' }}>{t.sender.toString().slice(0,6)}...{t.sender.toString().slice(-6)}</b></td>
+                                    <td><b style={{ color: '#007bff' }}>{t.receiver.toString().slice(0,6)}...{t.receiver.toString().slice(-6)}</b></td>
                                     <td><b style={{ color: '#007bff' }}>{parseFloat(t.amount).toFixed(5)} </b></td>
                                     <td><b style={{ color: '#007bff' }}>{t.time}</b></td>
                                 </tr>

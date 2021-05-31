@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Form, Container, Col, Row, Button } from 'react-bootstrap';
 import axios from 'axios';
 
-const postEndpoint = '/add_transaction'
 const getEndpoint = '/get_chain'
+const postEndpoint = '/add_transaction'
 
 class Send extends Component {
     constructor(props) {

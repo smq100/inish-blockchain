@@ -35,13 +35,13 @@ class Transactions extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.chain.slice(0).reverse().map((t =>
-                                <tr key={t}>
-                                    <td><b style={{color:'#007bff'}}>{t.index}</b></td>
-                                    <td><b style={{color:'#007bff'}}>{t.nonce}</b></td>
-                                    <td><b style={{color:'#007bff'}}>0x{t.previous_hash.toString().slice(0,6)}...{t.previous_hash.toString().slice(-6)}</b></td>
-                                    <td><b style={{color:'#007bff'}}>{t.timestamp}</b></td>
-                                </tr>
+                        {this.state.chain.slice(0).reverse().map(((b, idx) =>
+                            <tr key={idx}>
+                                <td><b style={{color:'#007bff'}}>{b.index}</b></td>
+                                <td><b style={{color:'#007bff'}}>{b.nonce}</b></td>
+                                <td><b style={{color:'#007bff'}}>{b.previous_hash.toString().slice(0,6)}...{b.previous_hash.toString().slice(-6)}</b></td>
+                                <td><b style={{color:'#007bff'}}>{b.timestamp}</b></td>
+                            </tr>
                             ))}
                     </tbody>
                 </Table>
