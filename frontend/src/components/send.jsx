@@ -20,20 +20,20 @@ class Send extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    componentDidMount() {
+        axios.get(getEndpoint)
+            .then(response => {
+                const sender = response.data.chain[1].transactions[0].receiver;
+                this.setState({ sender });
+            })
+    }
+
     handleRecipient(event) {
         this.setState({ recipient: event.target.value });
     }
 
     handleAmount(event) {
         this.setState({ amount: event.target.value });
-    }
-
-    componentDidMount() {
-        axios.get(getEndpoint)
-            .then(res => {
-                const sender = res.data.chain[1].transactions[0].receiver;
-                this.setState({ sender });
-            })
     }
 
     handleSubmit(event) {

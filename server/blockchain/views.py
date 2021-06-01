@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from blockchain.blockchain import Blockchain
+from blockchain.blockchain.blockchain import Blockchain
 
 
 # Create our Blockchain

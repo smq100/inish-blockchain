@@ -15,8 +15,8 @@ class Transactions extends Component {
 
     componentDidMount() {
         axios.get(endpoint)
-            .then(res => {
-                const chain = res.data.chain;
+            .then(response => {
+                const chain = response.data.chain;
                 this.setState({ chain });
             })
     }

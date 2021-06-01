@@ -4,6 +4,10 @@ import hashlib
 import requests
 from urllib.parse import urlparse
 
+from blockchain.blockchain.block import Block
+from blockchain.blockchain.transaction import Transaction
+
+
 class Blockchain:
     def __init__(self):
         self.chain = []
@@ -13,33 +17,26 @@ class Blockchain:
         self.create_block(nonce = 1, previous_hash = '0')
 
     def add_transaction(self, sender, receiver, amount, time):
-        self.transactions.append({'sender': sender,
-                                  'receiver': receiver,
-                                  'amount': amount,
-                                  'time': str(datetime.datetime.now())})
+        t = Transaction(sender, receiver, amount).get()
+        self.transactions += [t]
 
         previous_block = self.get_last_block()
         return previous_block['index'] + 1
 
     def create_block(self, nonce, previous_hash):
-        block = {'index': len(self.chain) + 1,
-                 'timestamp': str(datetime.datetime.now()),
-                 'nonce': nonce,
-                 'previous_hash': previous_hash,
-                 'transactions': self.transactions}
-
+        b = Block(len(self.chain) + 1, nonce, previous_hash, self.transactions)
         self.transactions = []
-        self.chain += [block]
+        self.chain += [b.get()]
 
-        return block
+        return b.get()
 
     def do_proof_of_work(self, previous_nonce):
         new_nonce = 1
-        check_nonce = False
-        while check_nonce is False:
+        check_nonce = True
+        while check_nonce:
             hash_operation = hashlib.sha256(str(new_nonce**2 - previous_nonce**2).encode()).hexdigest()
             if hash_operation[:4] == '0000':
-                check_nonce = True
+                check_nonce = False
             else:
                 new_nonce += 1
 
