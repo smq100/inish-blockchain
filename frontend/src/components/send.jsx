@@ -23,7 +23,7 @@ class Send extends Component {
     componentDidMount() {
         axios.get(getEndpoint)
             .then(response => {
-                const sender = response.data.chain[1].transactions[0].receiver;
+                const sender = response.data.chain[0].transactions[0].receiver;
                 this.setState({ sender });
             })
     }

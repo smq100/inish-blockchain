@@ -1,4 +1,3 @@
-import datetime
 import json
 import hashlib
 import requests
@@ -11,22 +10,25 @@ from blockchain.blockchain.transaction import Transaction
 class Blockchain:
     def __init__(self):
         self.chain = []
-        self.transactions = []
         self.nodes = set()
 
+        # Genesis transaction
+        self.pending_transactions = [Transaction('0', '0', 0).get()]
+
+        # Genesis block
         self.create_block(nonce = 1, previous_hash = '0')
 
     def add_transaction(self, sender, receiver, amount, time):
         t = Transaction(sender, receiver, amount).get()
-        self.transactions += [t]
+        self.pending_transactions += [t]
 
         previous_block = self.get_last_block()
         return previous_block['index'] + 1
 
     def create_block(self, nonce, previous_hash):
-        b = Block(len(self.chain) + 1, nonce, previous_hash, self.transactions)
-        self.transactions = []
+        b = Block(len(self.chain)+1, nonce, previous_hash, self.pending_transactions)
         self.chain += [b.get()]
+        self.pending_transactions = []
 
         return b.get()
 
@@ -41,6 +43,9 @@ class Blockchain:
                 new_nonce += 1
 
         return new_nonce
+
+    def get_pending_transactions(self):
+        return self.pending_transactions
 
     def get_last_block(self):
         return self.chain[-1]

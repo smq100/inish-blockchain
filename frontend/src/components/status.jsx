@@ -20,7 +20,7 @@ class Status extends Component {
             .then(
                 response => {
                     const length = response.data.length;
-                    const address = response.data.chain[1].transactions[0].receiver;
+                    const address = response.data.chain[0].transactions[0].receiver;
                     this.setState({length, address});
                 },
                 error => {

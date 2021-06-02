@@ -8,8 +8,11 @@ class Transaction:
         self.amount = amount
         self.timestamp = datetime.datetime.now()
 
+    def __str__(self):
+        return vars(self)
+
     def __repr__(self):
-        return '<Transaction>'
+        return '<Transaction object>'
 
     def get(self):
         return {'sender': self.sender,

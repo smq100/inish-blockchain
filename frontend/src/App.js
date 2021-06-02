@@ -5,17 +5,8 @@ import Status from './components/status'
 import Send from './components/send'
 import Transactions from './components/transactions'
 import Blocks from './components/blocks'
-import axios from 'axios';
-
-const endpoint = '/mine_block'
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-
-        axios.get(endpoint)
-    }
-
     render() {
         return (
             <div className="App">

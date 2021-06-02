@@ -3,21 +3,21 @@ import React, { Component } from 'react';
 import { Container, Table } from 'react-bootstrap';
 import axios from 'axios';
 
-const endpoint = '/get_chain'
+const endpoint = '/get_pending'
 
 class Transactions extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            chain: [],
+            transactions: [],
         }
     }
 
     componentDidMount() {
         axios.get(endpoint)
             .then(response => {
-                const chain = response.data.chain;
-                this.setState({ chain });
+                const transactions = response.data.transactions;
+                this.setState({ transactions });
             })
     }
 
@@ -35,15 +35,14 @@ class Transactions extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.chain.slice(0).reverse().map((chain, idx1) =>
-                            chain.transactions.map((t, idx2) =>
-                                <tr key={idx2}>
-                                    <td><b style={{ color: '#007bff' }}>{t.sender}</b></td>
-                                    <td><b style={{ color: '#007bff' }}>{t.receiver}</b></td>
-                                    <td><b style={{ color: '#007bff' }}>{parseFloat(t.amount).toFixed(5)} </b></td>
-                                    <td><b style={{ color: '#007bff' }}>{t.timestamp}</b></td>
-                                </tr>
-                            ))}
+                        {this.state.transactions.slice(0).reverse().map(((t, idx) =>
+                            <tr key={idx}>
+                                <td><b style={{ color: '#007bff' }}>{t.sender}</b></td>
+                                <td><b style={{ color: '#007bff' }}>{t.receiver}</b></td>
+                                <td><b style={{ color: '#007bff' }}>{parseFloat(t.amount).toFixed(5)} </b></td>
+                                <td><b style={{ color: '#007bff' }}>{t.timestamp}</b></td>
+                            </tr>
+                        ))}
                     </tbody>
                 </Table>
             </Container>

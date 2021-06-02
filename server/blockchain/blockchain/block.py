@@ -9,12 +9,15 @@ class Block:
         self.timestamp = datetime.datetime.now()
         self.transactions = transactions
 
+    def __str__(self):
+        return vars(self)
+
     def __repr__(self):
-        return '<Block>'
+        return '<Block object>'
 
     def get(self):
         return {'index': self.index,
                 'nonce': self.nonce,
                 'previous_hash': self.previous_hash,
-                'timestamp': str(self.timestamp),
-                'transactions': self.transactions }
+                'transactions': self.transactions,
+                'timestamp': str(self.timestamp)}
