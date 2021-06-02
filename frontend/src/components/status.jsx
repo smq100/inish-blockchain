@@ -43,7 +43,7 @@ class Status extends Component {
                         <h5 style={{ color: '#007bff' }}>{this.state.address}</h5>
                     </Col >
                 </Row>
-                <br /><br /><br />
+                <br /><br />
             </Container>
         );
     }

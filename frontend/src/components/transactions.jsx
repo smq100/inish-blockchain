@@ -1,9 +1,10 @@
 
 import React, { Component } from 'react';
-import { Container, Table } from 'react-bootstrap';
+import { Container, Form, Table, Button, Col } from 'react-bootstrap';
 import axios from 'axios';
 
-const endpoint = '/get_pending'
+const endpoint_pending = '/get_pending'
+const endpoint_mine = '/mine_block'
 
 class Transactions extends Component {
     constructor(props) {
@@ -14,17 +15,36 @@ class Transactions extends Component {
     }
 
     componentDidMount() {
-        axios.get(endpoint)
+        axios.get(endpoint_pending)
             .then(response => {
                 const transactions = response.data.transactions;
                 this.setState({ transactions });
-            })
+            },
+                error => {
+                    console.log(error);
+                }
+            )
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+
+        axios.get(endpoint_mine, {})
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            },
+                error => {
+                    console.log(error);
+                }
+            )
     }
 
     render() {
         return (
             <Container>
-                <h3 className="text-muted mt-20"><b>Transactions</b></h3>
+                <br />
+                <h3 className="text-muted mt-20"><b>Pending Transactions</b></h3>
                 <Table responsive>
                     <thead>
                         <tr>
@@ -45,6 +65,12 @@ class Transactions extends Component {
                         ))}
                     </tbody>
                 </Table>
+                <Form onSubmit={this.handleSubmit}>
+                    <Col>
+                        <Button variant="primary mt-4" type="submit">Mine</Button>
+                    </Col>
+                </Form>
+                <br /><br /><br />
             </Container>
         );
     }

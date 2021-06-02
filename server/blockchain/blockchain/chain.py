@@ -16,7 +16,7 @@ class Blockchain:
         self.pending_transactions = [Transaction('0', '0', 0).get()]
 
         # Genesis block
-        self.create_block(nonce = 1, previous_hash = '0')
+        self.create_block(nonce = 1, hash = '0', previous_hash = '0')
 
     def add_transaction(self, sender, receiver, amount, time):
         t = Transaction(sender, receiver, amount).get()
@@ -25,24 +25,25 @@ class Blockchain:
         previous_block = self.get_last_block()
         return previous_block['index'] + 1
 
-    def create_block(self, nonce, previous_hash):
-        b = Block(len(self.chain)+1, nonce, previous_hash, self.pending_transactions)
+    def create_block(self, nonce, hash, previous_hash):
+        b = Block(len(self.chain)+1, nonce, hash, previous_hash, self.pending_transactions)
         self.chain += [b.get()]
         self.pending_transactions = []
 
         return b.get()
 
     def do_proof_of_work(self, previous_nonce):
+        hash = ''
         new_nonce = 1
         check_nonce = True
         while check_nonce:
-            hash_operation = hashlib.sha256(str(new_nonce**2 - previous_nonce**2).encode()).hexdigest()
-            if hash_operation[:4] == '0000':
+            hash = hashlib.sha256(str(new_nonce**2 - previous_nonce**2).encode()).hexdigest()
+            if hash[:4] == '0000':
                 check_nonce = False
             else:
                 new_nonce += 1
 
-        return new_nonce
+        return hash, new_nonce
 
     def get_pending_transactions(self):
         return self.pending_transactions

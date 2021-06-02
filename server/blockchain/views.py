@@ -1,5 +1,4 @@
 
-import datetime
 import json
 from uuid import uuid4
 
@@ -30,14 +29,14 @@ def mine_block(request):
     if request.method == 'GET':
         previous_block = mgr.blockchain.get_last_block()
         previous_nonce = previous_block['nonce']
-        nonce = mgr.blockchain.do_proof_of_work(previous_nonce)
-        previous_hash = mgr.blockchain.get_hash(previous_block)
-        mgr.blockchain.add_transaction(sender=root_node, receiver=node_address, amount=1.15, time=str(datetime.datetime.now()))
-        block = mgr.blockchain.create_block(nonce, previous_hash)
+        previous_hash = previous_block['hash']
+        hash, nonce = mgr.blockchain.do_proof_of_work(previous_nonce)
+        block = mgr.blockchain.create_block(nonce, hash, previous_hash)
         response = {'message': 'Congratulations, you just mined a block!',
                     'index': block['index'],
                     'timestamp': block['timestamp'],
                     'nonce': block['nonce'],
+                    'hash': block['hash'],
                     'previous_hash': block['previous_hash'],
                     'transactions': block['transactions']}
 

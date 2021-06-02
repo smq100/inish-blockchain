@@ -1,3 +1,3 @@
-from blockchain.blockchain.blockchain import Blockchain
+from blockchain.blockchain.chain import Blockchain
 
 blockchain = Blockchain()
