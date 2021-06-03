@@ -27,10 +27,8 @@ def add_transaction(request):
 
 def mine_block(request):
     if request.method == 'GET':
-        previous_block = mgr.blockchain.get_last_block()
-        previous_nonce = previous_block['nonce']
-        previous_hash = previous_block['hash']
-        hash, nonce = mgr.blockchain.do_proof_of_work(previous_nonce)
+        previous_hash = mgr.blockchain.get_last_block()['hash']
+        hash, nonce = mgr.blockchain.do_proof_of_work()
         block = mgr.blockchain.create_block(nonce, hash, previous_hash)
         response = {'message': 'Congratulations, you just mined a block!',
                     'index': block['index'],
@@ -58,18 +56,16 @@ def get_pending_transactions(request):
 
 def is_valid(request):
     if request.method == 'GET':
-        is_valid = mgr.blockchain.is_chain_valid(mgr.blockchain.chain)
-        if is_valid:
-            response = {'message': 'All good. The Blockchain is valid.'}
+        if mgr.blockchain.is_chain_valid():
+            response = {'message': 'The Blockchain is valid.'}
         else:
-            response = {'message': 'Houston, we have a problem. The Blockchain is not valid.'}
+            response = {'message': 'The Blockchain is NOT valid.'}
 
     return JsonResponse(response)
 
 def replace_chain(request):
     if request.method == 'GET':
-        is_chain_replaced = mgr.blockchain.replace_chain()
-        if is_chain_replaced:
+        if mgr.blockchain.replace_chain():
             response = {'message': 'The nodes had different chains so the chain was replaced by the longest one.',
                         'new_chain': mgr.blockchain.chain}
         else:

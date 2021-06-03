@@ -6,6 +6,7 @@ from urllib.parse import urlparse
 from blockchain.blockchain.block import Block
 from blockchain.blockchain.transaction import Transaction
 
+_DIFFICULTY = 4
 
 class Blockchain:
     def __init__(self):
@@ -25,6 +26,24 @@ class Blockchain:
         previous_block = self.get_last_block()
         return previous_block['index'] + 1
 
+    def do_proof_of_work(self):
+        hash = ''
+        new_nonce = 1
+        check_nonce = True
+
+        data = 0
+        for pending in self.pending_transactions:
+            data += float(pending['amount'])
+
+        while check_nonce:
+            hash = hashlib.sha256(str(new_nonce**2 - data**2).encode()).hexdigest()
+            if hash[:_DIFFICULTY] == ('0' * _DIFFICULTY):
+                check_nonce = False
+            else:
+                new_nonce += 1
+
+        return hash, new_nonce
+
     def create_block(self, nonce, hash, previous_hash):
         b = Block(len(self.chain)+1, nonce, hash, previous_hash, self.pending_transactions)
         self.chain += [b.get()]
@@ -32,47 +51,53 @@ class Blockchain:
 
         return b.get()
 
-    def do_proof_of_work(self, previous_nonce):
-        hash = ''
-        new_nonce = 1
-        check_nonce = True
-        while check_nonce:
-            hash = hashlib.sha256(str(new_nonce**2 - previous_nonce**2).encode()).hexdigest()
-            if hash[:4] == '0000':
-                check_nonce = False
-            else:
-                new_nonce += 1
-
-        return hash, new_nonce
-
     def get_pending_transactions(self):
         return self.pending_transactions
 
     def get_last_block(self):
         return self.chain[-1]
 
-    def get_hash(self, block):
-        encoded_block = json.dumps(block, sort_keys=True).encode()
-        hash = hashlib.sha256(encoded_block).hexdigest()
+    def _calculate_hash(self, block):
+        data = 0
+        for pending in block['transactions']:
+            data += float(pending['amount'])
 
+        hash = hashlib.sha256(str(float(block['nonce'])**2 - data**2).encode()).hexdigest()
         return hash
 
-    def is_chain_valid(self, chain):
-        previous_block = chain[0]
-        block_index = 1
-        while block_index < len(chain):
-            block = chain[block_index]
-            if block['previous_hash'] != self.get_hash(previous_block):
-                return False
-            previous_nonce = previous_block['nonce']
-            nonce = block['nonce']
-            hash_operation = hashlib.sha256(str(nonce**2 - previous_nonce**2).encode()).hexdigest()
-            if hash_operation[:4] != '0000':
-                return False
-            previous_block = block
-            block_index += 1
+    def is_chain_valid(self):
+        ret = True
+        length = len(self.chain)
 
-        return True
+        if length == 0:
+            ret = False # No genesis block. Should never be here
+
+        elif length == 1:
+            ret = True # Treat genesis block as always valid
+
+        elif length == 2:
+            hash = self._calculate_hash(self.chain[1])
+            print(hash)
+            ret = bool(hash[:_DIFFICULTY] == ('0' * _DIFFICULTY))
+
+        else:
+            previous_block = self.chain[1]
+            block_index = 2
+            while block_index < length:
+                block = self.chain[block_index]
+                hash = self._calculate_hash(block)
+                if hash[:_DIFFICULTY] == ('0' * _DIFFICULTY):
+                    ret = False
+                    break # Block Failed
+
+                if block['previous_hash'] != self._calculate_hash(previous_block):
+                    ret = False
+                    break # Previous block Failed
+
+                previous_block = block
+                block_index += 1
+
+        return ret
 
     def add_node(self, address):
         parsed_url = urlparse(address)

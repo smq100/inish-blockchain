@@ -1,9 +1,10 @@
 
 import React, { Component } from 'react';
-import { Container, Table } from 'react-bootstrap';
+import { Container, Form, Table, Button, Col } from 'react-bootstrap';
 import axios from 'axios';
 
-const endpoint = '/get_chain'
+const endpoint_chain = '/get_chain'
+const endpoint_valid = '/is_valid'
 
 class Transactions extends Component {
     constructor(props) {
@@ -14,7 +15,7 @@ class Transactions extends Component {
     }
 
     componentDidMount() {
-        axios.get(endpoint)
+        axios.get(endpoint_chain)
             .then(response => {
                 const chain = response.data.chain;
                 this.setState({ chain });
@@ -23,6 +24,20 @@ class Transactions extends Component {
                 console.log(error);
             }
         )
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+
+        axios.get(endpoint_valid)
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            },
+                error => {
+                    console.log(error);
+                }
+            )
     }
 
     render() {
@@ -52,6 +67,11 @@ class Transactions extends Component {
                             ))}
                     </tbody>
                 </Table>
+                <Form onSubmit={this.handleSubmit}>
+                    <Col>
+                        <Button variant="primary mt-4" type="submit">Validate</Button>
+                    </Col>
+                </Form>
                 <br /><br /><br />
             </Container>
         );

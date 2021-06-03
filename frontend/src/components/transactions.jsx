@@ -29,7 +29,7 @@ class Transactions extends Component {
     handleSubmit(event) {
         event.preventDefault();
 
-        axios.get(endpoint_mine, {})
+        axios.get(endpoint_mine)
             .then(res => {
                 console.log(res);
                 console.log(res.data);

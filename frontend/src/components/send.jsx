@@ -67,7 +67,7 @@ class Send extends Component {
                     </Form.Group>
                     <Form.Group as={Row}>
                         <Col>
-                            <Button variant="primary mt-4" type="submit">Send</Button>
+                            <Button variant="primary mt-4" type="submit">Post</Button>
                         </Col>
                     </Form.Group>
                 </Form>
