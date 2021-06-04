@@ -18,7 +18,7 @@ class Transactions extends Component {
         axios.get(endpoint_chain)
             .then(response => {
                 const chain = response.data.chain;
-                this.setState({ chain });
+                this.setState({chain});
             },
             error => {
                 console.log(error);
@@ -50,6 +50,7 @@ class Transactions extends Component {
                         <tr>
                             <th>Index</th>
                             <th>Nonce</th>
+                            <th>Transactions</th>
                             <th>Hash</th>
                             <th>Previous Hash</th>
                             <th>Timestamp</th>
@@ -60,6 +61,7 @@ class Transactions extends Component {
                             <tr key={idx}>
                                 <td><b style={{color:'#007bff'}}>{b.index}</b></td>
                                 <td><b style={{color:'#007bff'}}>{b.nonce}</b></td>
+                                <td><b style={{color:'#007bff'}}>{b.transactions.length}</b></td>
                                 <td><b style={{color:'#007bff'}}>{b.hash.toString().slice(0,15)}...</b></td>
                                 <td><b style={{color:'#007bff'}}>{b.previous_hash.toString().slice(0,15)}...</b></td>
                                 <td><b style={{color:'#007bff'}}>{b.timestamp}</b></td>

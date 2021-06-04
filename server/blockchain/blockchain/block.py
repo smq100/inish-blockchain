@@ -1,5 +1,5 @@
 import datetime
-
+import hashlib
 
 class Block:
     def __init__(self):
@@ -26,3 +26,7 @@ class Block:
                 'previous_hash': self.previous_hash,
                 'transactions': self.transactions,
                 'timestamp': str(self.timestamp)}
+
+    def calculate_hash(self):
+        hash = hashlib.sha256(str(self).encode()).hexdigest()
+        return hash

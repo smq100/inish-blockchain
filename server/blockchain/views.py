@@ -17,10 +17,10 @@ root_node = 'e36f0158f0aed45b3bc755dc52ed4560d'
 def add_transaction(request):
     if request.method == 'POST':
         received_json = json.loads(request.body)
-        transaction_keys = ['sender', 'receiver', 'amount','time']
+        transaction_keys = ['sender', 'receiver', 'data','time']
         if not all(key in received_json for key in transaction_keys):
             return 'Some elements of the transaction are missing', HttpResponse(status=400)
-        index = mgr.blockchain.add_transaction(received_json['sender'], received_json['receiver'], received_json['amount'], received_json['time'])
+        index = mgr.blockchain.add_transaction(received_json['sender'], received_json['receiver'], received_json['data'], received_json['time'])
         response = {'message': f'This transaction will be added to Block {index}'}
 
     return JsonResponse(response)

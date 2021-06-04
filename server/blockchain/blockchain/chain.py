@@ -1,5 +1,3 @@
-import json
-import hashlib
 import requests
 from urllib.parse import urlparse
 
@@ -18,7 +16,7 @@ class Blockchain:
 
         # Genesis block
         block = Block()
-        block.index = 0
+        block.index = 1
         block.nonce = 0
         block.hash = '0'
         block.previous_hash = '0'
@@ -28,18 +26,14 @@ class Blockchain:
         self.chain_text = [block.get()]
         self.pending_transactions = []
 
-    def add_transaction(self, sender, receiver, amount, time):
-        t = Transaction(sender, receiver, amount).get()
+    def add_transaction(self, sender, receiver, data, time):
+        t = Transaction(sender, receiver, data).get()
         self.pending_transactions += [t]
 
         previous_block = self.chain[-1]
         return previous_block.index + 1
 
     def mine_and_add(self):
-        data = 0
-        for pending in self.pending_transactions:
-            data += float(pending['amount'])
-
         block = Block()
         block.index = len(self.chain) + 1
         block.nonce = 0
@@ -50,7 +44,7 @@ class Blockchain:
         hash = ''
         for new_nonce in range(1, _max_nonce):
             block.nonce = new_nonce
-            hash = self._calculate_hash(block)
+            hash = block.calculate_hash()
             if int(hash, 16) < _target:
                 block.hash = hash
                 break
@@ -74,7 +68,7 @@ class Blockchain:
             ret = True # Treat genesis block as always valid
 
         elif length == 2:
-            hash = self._calculate_hash(self.chain[1])
+            hash = self.chain[1].calculate_hash()
             print(self.chain[1])
             print(hash)
             ret = (hash == self.chain[1].hash)
@@ -84,12 +78,12 @@ class Blockchain:
             block_index = 2
             while block_index < length:
                 block = self.chain[block_index]
-                hash = self._calculate_hash(block)
+                hash = block.calculate_hash()
                 if hash != self.chain[block_index].hash:
                     ret = False
                     break # Block Failed
 
-                if block.previous_hash != self._calculate_hash(previous_block):
+                if block.previous_hash != previous_block.calculate_hash():
                     ret = False
                     break # Previous block Failed
 
@@ -97,11 +91,6 @@ class Blockchain:
                 block_index += 1
 
         return ret
-
-    @staticmethod
-    def _calculate_hash(block):
-        hash = hashlib.sha256(str(block).encode()).hexdigest()
-        return hash
 
     def get_pending_transactions(self):
         return self.pending_transactions

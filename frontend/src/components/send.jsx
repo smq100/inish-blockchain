@@ -9,13 +9,13 @@ class Send extends Component {
         super(props);
         this.state = {
             recipient: '',
-            amount: 0,
+            data: 0,
             time: '',
             sender: '',
         }
 
         this.handleRecipient = this.handleRecipient.bind(this);
-        this.handleAmount = this.handleAmount.bind(this);
+        this.handleData = this.handleData.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -23,8 +23,8 @@ class Send extends Component {
         this.setState({ recipient: event.target.value });
     }
 
-    handleAmount(event) {
-        this.setState({ amount: event.target.value });
+    handleData(event) {
+        this.setState({ data: event.target.value });
     }
 
     handleSubmit(event) {
@@ -33,7 +33,7 @@ class Send extends Component {
         axios.post(postEndpoint, {
             "sender": this.state.sender,
             "receiver": this.state.recipient,
-            "amount": this.state.amount,
+            "data": this.state.data,
             "time": this.state.time
         })
             .then(res => {
@@ -60,9 +60,9 @@ class Send extends Component {
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row}>
-                        <Form.Label column sm="1">Amount</Form.Label>
+                        <Form.Label column sm="1">Data</Form.Label>
                         <Col sm="0">
-                            <Form.Control onChange={this.handleAmount} placeholder="Amount" value={this.state.amount} />
+                            <Form.Control onChange={this.handleData} placeholder="Data" value={this.state.data} />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row}>

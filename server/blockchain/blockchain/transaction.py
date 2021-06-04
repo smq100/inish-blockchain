@@ -2,10 +2,10 @@ import datetime
 
 
 class Transaction:
-    def __init__(self, sender, receiver, amount):
+    def __init__(self, sender, receiver, data):
         self.sender = sender
         self.receiver = receiver
-        self.amount = amount
+        self.data = data
         self.timestamp = datetime.datetime.now()
 
     def __str__(self):
@@ -17,5 +17,5 @@ class Transaction:
     def get(self):
         return {'sender': self.sender,
                 'receiver': self.receiver,
-                'amount': self.amount,
+                'data': self.data,
                 'timestamp': str(self.timestamp)}

@@ -50,7 +50,7 @@ class Transactions extends Component {
                         <tr>
                             <th>From</th>
                             <th>To</th>
-                            <th>Amount</th>
+                            <th>Data</th>
                             <th>Timestamp</th>
                         </tr>
                     </thead>
@@ -59,7 +59,7 @@ class Transactions extends Component {
                             <tr key={idx}>
                                 <td><b style={{ color: '#007bff' }}>{t.sender}</b></td>
                                 <td><b style={{ color: '#007bff' }}>{t.receiver}</b></td>
-                                <td><b style={{ color: '#007bff' }}>{parseFloat(t.amount).toFixed(5)} </b></td>
+                                <td><b style={{ color: '#007bff' }}>{t.data} </b></td>
                                 <td><b style={{ color: '#007bff' }}>{t.timestamp}</b></td>
                             </tr>
                         ))}
