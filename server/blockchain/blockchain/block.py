@@ -2,12 +2,12 @@ import datetime
 
 
 class Block:
-    def __init__(self, index, nonce, hash, previous_hash, transactions):
-        self.index = index
-        self.nonce = nonce
-        self.hash = hash
-        self.previous_hash = previous_hash
-        self.transactions = transactions
+    def __init__(self):
+        self.index = 0
+        self.nonce = 0
+        self.hash = ''
+        self.previous_hash = ''
+        self.transactions = []
         self.timestamp = datetime.datetime.now()
 
     def __str__(self):

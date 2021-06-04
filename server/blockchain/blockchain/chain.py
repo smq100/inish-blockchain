@@ -6,56 +6,60 @@ from urllib.parse import urlparse
 from blockchain.blockchain.block import Block
 from blockchain.blockchain.transaction import Transaction
 
-_DIFFICULTY = 4
+_difficulty = 16
+_target = (2 ** (256 - _difficulty))
+_max_nonce = (2 ** 32)
 
 class Blockchain:
     def __init__(self):
         self.chain = []
         self.nodes = set()
 
-        # Genesis transaction
-        self.pending_transactions = [Transaction('0', '0', 0).get()]
-
         # Genesis block
-        self.create_block(nonce = 1, hash = '0', previous_hash = '0')
+        block = Block()
+        block.index = 0
+        block.nonce = 0
+        block.hash = '0'
+        block.previous_hash = '0'
+        block.transactions = [Transaction('0', '0', 0).get()]
+
+        self.chain = [block.get()]
+        self.pending_transactions = []
 
     def add_transaction(self, sender, receiver, amount, time):
         t = Transaction(sender, receiver, amount).get()
         self.pending_transactions += [t]
 
-        previous_block = self.get_last_block()
+        previous_block = self.chain[-1]
         return previous_block['index'] + 1
 
-    def do_proof_of_work(self):
-        hash = ''
-        new_nonce = 1
-        check_nonce = True
-
+    def mine_and_add(self):
         data = 0
         for pending in self.pending_transactions:
             data += float(pending['amount'])
 
-        while check_nonce:
+        hash = ''
+        for new_nonce in range(1, _max_nonce):
             hash = hashlib.sha256(str(new_nonce**2 - data**2).encode()).hexdigest()
-            if hash[:_DIFFICULTY] == ('0' * _DIFFICULTY):
-                check_nonce = False
+            if int(hash, 16) < _target:
+                break
             else:
                 new_nonce += 1
 
-        return hash, new_nonce
+        block = Block()
+        block.index = len(self.chain) + 1
+        block.nonce = new_nonce
+        block.hash = hash
+        block.previous_hash = self.chain[-1]['hash']
+        block.transactions = self.pending_transactions
 
-    def create_block(self, nonce, hash, previous_hash):
-        b = Block(len(self.chain)+1, nonce, hash, previous_hash, self.pending_transactions)
-        self.chain += [b.get()]
+        self.chain += [block.get()]
         self.pending_transactions = []
 
-        return b.get()
+        return block.get()
 
     def get_pending_transactions(self):
         return self.pending_transactions
-
-    def get_last_block(self):
-        return self.chain[-1]
 
     def _calculate_hash(self, block):
         data = 0
@@ -77,8 +81,7 @@ class Blockchain:
 
         elif length == 2:
             hash = self._calculate_hash(self.chain[1])
-            print(hash)
-            ret = bool(hash[:_DIFFICULTY] == ('0' * _DIFFICULTY))
+            ret = bool(int(hash, 16) < _target)
 
         else:
             previous_block = self.chain[1]
@@ -86,7 +89,7 @@ class Blockchain:
             while block_index < length:
                 block = self.chain[block_index]
                 hash = self._calculate_hash(block)
-                if hash[:_DIFFICULTY] == ('0' * _DIFFICULTY):
+                if hash[:_difficulty] == ('0' * _difficulty):
                     ret = False
                     break # Block Failed
 

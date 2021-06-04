@@ -27,9 +27,7 @@ def add_transaction(request):
 
 def mine_block(request):
     if request.method == 'GET':
-        previous_hash = mgr.blockchain.get_last_block()['hash']
-        hash, nonce = mgr.blockchain.do_proof_of_work()
-        block = mgr.blockchain.create_block(nonce, hash, previous_hash)
+        block = mgr.blockchain.mine_and_add()
         response = {'message': 'Congratulations, you just mined a block!',
                     'index': block['index'],
                     'timestamp': block['timestamp'],
