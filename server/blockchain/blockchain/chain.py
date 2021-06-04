@@ -13,6 +13,7 @@ _max_nonce = (2 ** 32)
 class Blockchain:
     def __init__(self):
         self.chain = []
+        self.chain_text = []
         self.nodes = set()
 
         # Genesis block
@@ -23,7 +24,8 @@ class Blockchain:
         block.previous_hash = '0'
         block.transactions = [Transaction('0', '0', 0).get()]
 
-        self.chain = [block.get()]
+        self.chain = [block]
+        self.chain_text = [block.get()]
         self.pending_transactions = []
 
     def add_transaction(self, sender, receiver, amount, time):
@@ -31,45 +33,37 @@ class Blockchain:
         self.pending_transactions += [t]
 
         previous_block = self.chain[-1]
-        return previous_block['index'] + 1
+        return previous_block.index + 1
 
     def mine_and_add(self):
         data = 0
         for pending in self.pending_transactions:
             data += float(pending['amount'])
 
+        block = Block()
+        block.index = len(self.chain) + 1
+        block.nonce = 0
+        block.hash = ''
+        block.previous_hash = self.chain[-1].hash
+        block.transactions = self.pending_transactions
+
         hash = ''
         for new_nonce in range(1, _max_nonce):
-            hash = hashlib.sha256(str(new_nonce**2 - data**2).encode()).hexdigest()
+            block.nonce = new_nonce
+            hash = self._calculate_hash(block)
             if int(hash, 16) < _target:
+                block.hash = hash
                 break
             else:
                 new_nonce += 1
 
-        block = Block()
-        block.index = len(self.chain) + 1
-        block.nonce = new_nonce
-        block.hash = hash
-        block.previous_hash = self.chain[-1]['hash']
-        block.transactions = self.pending_transactions
-
-        self.chain += [block.get()]
+        self.chain += [block]
+        self.chain_text += [block.get()]
         self.pending_transactions = []
 
         return block.get()
 
-    def get_pending_transactions(self):
-        return self.pending_transactions
-
-    def _calculate_hash(self, block):
-        data = 0
-        for pending in block['transactions']:
-            data += float(pending['amount'])
-
-        hash = hashlib.sha256(str(float(block['nonce'])**2 - data**2).encode()).hexdigest()
-        return hash
-
-    def is_chain_valid(self):
+    def is_valid(self):
         ret = True
         length = len(self.chain)
 
@@ -81,7 +75,9 @@ class Blockchain:
 
         elif length == 2:
             hash = self._calculate_hash(self.chain[1])
-            ret = bool(int(hash, 16) < _target)
+            print(self.chain[1])
+            print(hash)
+            ret = (hash == self.chain[1].hash)
 
         else:
             previous_block = self.chain[1]
@@ -89,11 +85,11 @@ class Blockchain:
             while block_index < length:
                 block = self.chain[block_index]
                 hash = self._calculate_hash(block)
-                if hash[:_difficulty] == ('0' * _difficulty):
+                if hash != self.chain[block_index].hash:
                     ret = False
                     break # Block Failed
 
-                if block['previous_hash'] != self._calculate_hash(previous_block):
+                if block.previous_hash != self._calculate_hash(previous_block):
                     ret = False
                     break # Previous block Failed
 
@@ -101,6 +97,14 @@ class Blockchain:
                 block_index += 1
 
         return ret
+
+    @staticmethod
+    def _calculate_hash(block):
+        hash = hashlib.sha256(str(block).encode()).hexdigest()
+        return hash
+
+    def get_pending_transactions(self):
+        return self.pending_transactions
 
     def add_node(self, address):
         parsed_url = urlparse(address)
@@ -116,7 +120,7 @@ class Blockchain:
             if response.status_code == 200:
                 length = response.json()['length']
                 chain = response.json()['chain']
-                if length > max_length and self.is_chain_valid(chain):
+                if length > max_length and self.is_valid(chain):
                     max_length = length
                     longest_chain = chain
         if longest_chain:

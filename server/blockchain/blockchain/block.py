@@ -11,7 +11,10 @@ class Block:
         self.timestamp = datetime.datetime.now()
 
     def __str__(self):
-        return vars(self)
+        return str({'index': self.index,
+                'nonce': self.nonce,
+                'previous_hash': self.previous_hash,
+                'timestamp': self.timestamp})
 
     def __repr__(self):
         return '<Block object>'

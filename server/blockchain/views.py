@@ -40,8 +40,8 @@ def mine_block(request):
 
 def get_chain(request):
     if request.method == 'GET':
-        response = {'chain': mgr.blockchain.chain,
-                    'length': len(mgr.blockchain.chain)}
+        response = {'chain': mgr.blockchain.chain_text,
+                    'length': len(mgr.blockchain.chain_text)}
 
     return JsonResponse(response)
 
@@ -54,7 +54,7 @@ def get_pending_transactions(request):
 
 def is_valid(request):
     if request.method == 'GET':
-        if mgr.blockchain.is_chain_valid():
+        if mgr.blockchain.is_valid():
             response = {'message': 'The Blockchain is valid.'}
         else:
             response = {'message': 'The Blockchain is NOT valid.'}
@@ -65,10 +65,10 @@ def replace_chain(request):
     if request.method == 'GET':
         if mgr.blockchain.replace_chain():
             response = {'message': 'The nodes had different chains so the chain was replaced by the longest one.',
-                        'new_chain': mgr.blockchain.chain}
+                        'new_chain': mgr.blockchain.chain_text}
         else:
             response = {'message': 'All good. The chain is the largest one.',
-                        'actual_chain': mgr.blockchain.chain}
+                        'actual_chain': mgr.blockchain.chain_text}
 
     return JsonResponse(response)
 
