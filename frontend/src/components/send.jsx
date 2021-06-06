@@ -50,8 +50,7 @@ class Send extends Component {
         return (
             <Container>
                 <br />
-                <h3 className="text-muted"><b>SudoCoin</b></h3>
-                <h5 className="text-muted mb-4"><b>Send dummy crypto to anyone</b> </h5>
+                <h3 className="text-muted"><b>Insert Transaction</b></h3>
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group as={Row}>
                         <Form.Label column sm="1">Recipient</Form.Label>

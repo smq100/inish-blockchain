@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 
 
 class Transaction:
@@ -6,6 +7,7 @@ class Transaction:
         self.sender = sender
         self.receiver = receiver
         self.data = data
+        self.hash = self.calculate_hash()
         self.timestamp = datetime.datetime.now()
 
     def __str__(self):
@@ -18,4 +20,9 @@ class Transaction:
         return {'sender': self.sender,
                 'receiver': self.receiver,
                 'data': self.data,
-                'timestamp': str(self.timestamp)}
+                'timestamp': f'{self.timestamp:%Y-%m-%d %H:%M}',
+                'hash': self.hash }
+
+    def calculate_hash(self):
+        hash = hashlib.sha256(str(self.data).encode()).hexdigest()
+        return hash

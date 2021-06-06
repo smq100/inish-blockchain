@@ -1,12 +1,18 @@
 import requests
 from urllib.parse import urlparse
+from uuid import uuid4
 
 from blockchain.blockchain.block import Block
 from blockchain.blockchain.transaction import Transaction
 
+
 _difficulty = 16
 _target = (2 ** (256 - _difficulty))
 _max_nonce = (2 ** 32)
+
+# Create our Blockchain
+node_address = str(uuid4()).replace('-', '')
+root_node = 'e36f0158f0aed45b3bc755dc52ed4560d'
 
 class Blockchain:
     def __init__(self):
@@ -20,7 +26,7 @@ class Blockchain:
         block.nonce = 0
         block.hash = '0'
         block.previous_hash = '0'
-        block.transactions = [Transaction('0', '0', 0).get()]
+        block.transactions = [Transaction('0', node_address , 0).get()]
 
         self.chain = [block]
         self.chain_text = [block.get()]
@@ -34,28 +40,36 @@ class Blockchain:
         return previous_block.index + 1
 
     def mine_and_add(self):
-        block = Block()
-        block.index = len(self.chain) + 1
-        block.nonce = 0
-        block.hash = ''
-        block.previous_hash = self.chain[-1].hash
-        block.transactions = self.pending_transactions
+        ret = None
 
-        hash = ''
-        for new_nonce in range(1, _max_nonce):
-            block.nonce = new_nonce
-            hash = block.calculate_hash()
-            if int(hash, 16) < _target:
-                block.hash = hash
-                break
-            else:
-                new_nonce += 1
+        if len(self.pending_transactions) > 0:
+            block = Block()
+            block.index = len(self.chain) + 1
+            block.nonce = 0
+            block.hash = ''
+            block.previous_hash = self.chain[-1].hash
+            block.transactions = self.pending_transactions
 
-        self.chain += [block]
-        self.chain_text += [block.get()]
-        self.pending_transactions = []
+            tx_hashes = [n['hash'] for n in block.transactions]
+            block.calculate_merkle_root(tx_hashes)
 
-        return block.get()
+            hash = ''
+            for new_nonce in range(1, _max_nonce):
+                block.nonce = new_nonce
+                hash = block.calculate_hash()
+                if int(hash, 16) < _target:
+                    block.hash = hash
+                    break
+                else:
+                    new_nonce += 1
+
+            self.chain += [block]
+            self.chain_text += [block.get()]
+            self.pending_transactions = []
+
+            ret = block.get()
+
+        return ret
 
     def is_valid(self):
         ret = True
@@ -68,7 +82,7 @@ class Blockchain:
             ret = True # Treat genesis block as always valid
 
         elif length == 2:
-            hash = self.chain[1].calculate_hash()
+            hash = self.chain[1].calculate_merkle_root()
             print(self.chain[1])
             print(hash)
             ret = (hash == self.chain[1].hash)
@@ -78,12 +92,12 @@ class Blockchain:
             block_index = 2
             while block_index < length:
                 block = self.chain[block_index]
-                hash = block.calculate_hash()
+                hash = block.calculate_merkle_root()
                 if hash != self.chain[block_index].hash:
                     ret = False
                     break # Block Failed
 
-                if block.previous_hash != previous_block.calculate_hash():
+                if block.previous_hash != previous_block.calculate_merkle_root():
                     ret = False
                     break # Previous block Failed
 

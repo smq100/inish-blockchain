@@ -1,6 +1,5 @@
 
 import json
-from uuid import uuid4
 
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
@@ -8,10 +7,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 import blockchain.blockchain.manager as mgr
 
-
-# Create our Blockchain
-node_address = str(uuid4()).replace('-', '')
-root_node = 'e36f0158f0aed45b3bc755dc52ed4560d'
 
 @csrf_exempt
 def add_transaction(request):
@@ -28,13 +23,16 @@ def add_transaction(request):
 def mine_block(request):
     if request.method == 'GET':
         block = mgr.blockchain.mine_and_add()
-        response = {'message': 'Congratulations, you just mined a block!',
-                    'index': block['index'],
-                    'timestamp': block['timestamp'],
-                    'nonce': block['nonce'],
-                    'hash': block['hash'],
-                    'previous_hash': block['previous_hash'],
-                    'transactions': block['transactions']}
+        if block is not None:
+            response = {'message': 'Congratulations, you just mined a block!',
+                        'index': block['index'],
+                        'timestamp': block['timestamp'],
+                        'nonce': block['nonce'],
+                        'hash': block['hash'],
+                        'previous_hash': block['previous_hash'],
+                        'transactions': block['transactions']}
+        else:
+            response = {'message': 'No transactions'}
 
     return JsonResponse(response)
 

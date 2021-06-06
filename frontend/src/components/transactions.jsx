@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Container, Form, Table, Button, Col } from 'react-bootstrap';
+import { Container, Form, Button, Col } from 'react-bootstrap';
 import axios from 'axios';
 
 const endpoint_pending = '/get_pending'
@@ -45,26 +45,16 @@ class Transactions extends Component {
             <Container>
                 <br />
                 <h3 className="text-muted mt-20"><b>Pending Transactions</b></h3>
-                <Table responsive>
-                    <thead>
-                        <tr>
-                            <th>From</th>
-                            <th>To</th>
-                            <th>Data</th>
-                            <th>Timestamp</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.transactions.slice(0).reverse().map(((t, idx) =>
-                            <tr key={idx}>
-                                <td><b style={{ color: '#007bff' }}>{t.sender}</b></td>
-                                <td><b style={{ color: '#007bff' }}>{t.receiver}</b></td>
-                                <td><b style={{ color: '#007bff' }}>{t.data} </b></td>
-                                <td><b style={{ color: '#007bff' }}>{t.timestamp}</b></td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                {this.state.transactions.slice(0).reverse().map(((t, idx) =>
+                    <div key={idx} className="text-start">
+                        <h5 className="text-muted">From: <b style={{ color: '#007bff' }}>{t.sender}</b></h5>
+                        <h5 className="text-muted">To: <b style={{ color: '#007bff' }}>{t.receiver}</b></h5>
+                        <h5 className="text-muted">Data: <b style={{ color: '#007bff' }}>{t.data}</b></h5>
+                        <h5 className="text-muted">Hash: <b style={{ color: '#007bff' }}>{t.hash}</b></h5>
+                        <h5 className="text-muted">Time: <b style={{ color: '#007bff' }}>{t.timestamp}</b></h5>
+                        <hr /><br />
+                    </div>
+                ))}
                 <Form onSubmit={this.handleSubmit}>
                     <Col>
                         <Button variant="primary mt-4" type="submit">Mine</Button>

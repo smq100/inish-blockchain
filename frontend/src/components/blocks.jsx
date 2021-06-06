@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Container, Form, Table, Button, Col } from 'react-bootstrap';
+import { Container, Form, Button, Col } from 'react-bootstrap';
 import axios from 'axios';
 
 const endpoint_chain = '/get_chain'
@@ -45,30 +45,17 @@ class Transactions extends Component {
             <Container>
                 <br />
                 <h3 className="text-muted mt-20"><b>Blocks</b></h3>
-                <Table responsive>
-                    <thead>
-                        <tr>
-                            <th>Index</th>
-                            <th>Nonce</th>
-                            <th>Transactions</th>
-                            <th>Hash</th>
-                            <th>Previous Hash</th>
-                            <th>Timestamp</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.chain.slice(0).reverse().map(((b, idx) =>
-                            <tr key={idx}>
-                                <td><b style={{color:'#007bff'}}>{b.index}</b></td>
-                                <td><b style={{color:'#007bff'}}>{b.nonce}</b></td>
-                                <td><b style={{color:'#007bff'}}>{b.transactions.length}</b></td>
-                                <td><b style={{color:'#007bff'}}>{b.hash.toString().slice(0,15)}...</b></td>
-                                <td><b style={{color:'#007bff'}}>{b.previous_hash.toString().slice(0,15)}...</b></td>
-                                <td><b style={{color:'#007bff'}}>{b.timestamp}</b></td>
-                            </tr>
-                            ))}
-                    </tbody>
-                </Table>
+                {this.state.chain.slice(0).reverse().map(((b, idx) =>
+                    <div key={idx} className="text-start">
+                        <h5 className="text-muted">Index: <b style={{ color: '#007bff' }}>{b.index}</b></h5>
+                        <h5 className="text-muted">Nonce: <b style={{ color: '#007bff' }}>{b.nonce}</b></h5>
+                        <h5 className="text-muted">Transactions: <b style={{ color: '#007bff' }}>{b.transactions.length}</b></h5>
+                        <h5 className="text-muted">Hash: <b style={{ color: '#007bff' }}>{b.hash}</b></h5>
+                        <h5 className="text-muted">Previous Hash: <b style={{ color: '#007bff' }}>{b.previous_hash}</b></h5>
+                        <h5 className="text-muted">Time: <b style={{ color: '#007bff' }}>{b.timestamp}</b></h5>
+                        <hr /><br />
+                    </div>
+                ))}
                 <Form onSubmit={this.handleSubmit}>
                     <Col>
                         <Button variant="primary mt-4" type="submit">Validate</Button>
