@@ -18,7 +18,7 @@ class Transactions extends Component {
         axios.get(endpoint_pending)
             .then(response => {
                 const transactions = response.data.transactions;
-                this.setState({ transactions });
+                this.setState({transactions});
             },
                 error => {
                     console.log(error);
@@ -40,6 +40,18 @@ class Transactions extends Component {
             )
     }
 
+    refresh = function() {
+        axios.get(endpoint_pending)
+            .then(response => {
+                const transactions = response.data.transactions;
+                this.setState({transactions});
+            },
+                error => {
+                    console.log(error);
+                }
+            )
+    }
+
     render() {
         return (
             <Container>
@@ -47,12 +59,27 @@ class Transactions extends Component {
                 <h3 className="text-muted mt-20"><b>Pending Transactions</b></h3>
                 {this.state.transactions.slice(0).reverse().map(((t, idx) =>
                     <div key={idx} className="text-start">
-                        <h5 className="text-muted">From: <b style={{ color: '#007bff' }}>{t.sender}</b></h5>
-                        <h5 className="text-muted">To: <b style={{ color: '#007bff' }}>{t.receiver}</b></h5>
-                        <h5 className="text-muted">Data: <b style={{ color: '#007bff' }}>{t.data}</b></h5>
-                        <h5 className="text-muted">Hash: <b style={{ color: '#007bff' }}>{t.hash}</b></h5>
-                        <h5 className="text-muted">Time: <b style={{ color: '#007bff' }}>{t.timestamp}</b></h5>
-                        <hr /><br />
+                        <hr />
+                        <div className="row">
+                            <div className="col-1">From:</div>
+                            <div className="col">{t.sender}</div>
+                        </div>
+                        <div className="row">
+                            <div className="col-1">To:</div>
+                            <div className="col">{t.receiver}</div>
+                        </div>
+                        <div className="row">
+                            <div className="col-1">Data:</div>
+                            <div className="col">{t.data}</div>
+                        </div>
+                        <div className="row">
+                            <div className="col-1">Hash:</div>
+                            <div className="col">{t.hash}</div>
+                        </div>
+                        <div className="row">
+                            <div className="col-1">Time:</div>
+                            <div className="col">{t.timestamp}</div>
+                        </div>
                     </div>
                 ))}
                 <Form onSubmit={this.handleSubmit}>

@@ -3,6 +3,7 @@ import { Form, Container, Col, Row, Button } from 'react-bootstrap';
 import axios from 'axios';
 
 const postEndpoint = '/add_transaction'
+const endpoint = '/get_chain'
 
 class Send extends Component {
     constructor(props) {
@@ -17,6 +18,19 @@ class Send extends Component {
         this.handleRecipient = this.handleRecipient.bind(this);
         this.handleData = this.handleData.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentDidMount() {
+        axios.get(endpoint)
+            .then(
+                response => {
+                    const sender = response.data.chain[0].transactions[0].receiver;
+                    this.setState({ sender });
+                },
+                error => {
+                    console.log(error);
+                }
+            )
     }
 
     handleRecipient(event) {
@@ -40,10 +54,10 @@ class Send extends Component {
                 console.log(res);
                 console.log(res.data);
             },
-            error => {
-                console.log(error);
-            }
-        )
+                error => {
+                    console.log(error);
+                }
+            )
     }
 
     render() {

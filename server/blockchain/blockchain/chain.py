@@ -4,7 +4,9 @@ from uuid import uuid4
 
 from blockchain.blockchain.block import Block
 from blockchain.blockchain.transaction import Transaction
+from blockchain import utils
 
+_logger = utils.get_logger()
 
 _difficulty = 16
 _target = (2 ** (256 - _difficulty))
@@ -25,7 +27,9 @@ class Blockchain:
         block.index = 1
         block.nonce = 0
         block.hash = '0'
+        block.merkle_root = '0'
         block.previous_hash = '0'
+        block.difficulty = _difficulty
         block.transactions = [Transaction('0', node_address , 0).get()]
 
         self.chain = [block]
@@ -37,6 +41,9 @@ class Blockchain:
         self.pending_transactions += [t]
 
         previous_block = self.chain[-1]
+
+        _logger.info(f'{__name__}: Added transaction: s:{sender}, r:{receiver} d:{data}')
+
         return previous_block.index + 1
 
     def mine_and_add(self):
@@ -49,6 +56,7 @@ class Blockchain:
             block.hash = ''
             block.previous_hash = self.chain[-1].hash
             block.transactions = self.pending_transactions
+            block.difficulty = _difficulty
 
             tx_hashes = [n['hash'] for n in block.transactions]
             block.calculate_merkle_root(tx_hashes)
@@ -67,6 +75,8 @@ class Blockchain:
             self.chain_text += [block.get()]
             self.pending_transactions = []
 
+            _logger.info(f'{__name__}: Successfully mined block {block.index}')
+
             ret = block.get()
 
         return ret
@@ -83,9 +93,7 @@ class Blockchain:
 
         elif length == 2:
             hash = self.chain[1].calculate_merkle_root()
-            print(self.chain[1])
-            print(hash)
-            ret = (hash == self.chain[1].hash)
+            ret = (hash == self.chain[1].merkle_root)
 
         else:
             previous_block = self.chain[1]

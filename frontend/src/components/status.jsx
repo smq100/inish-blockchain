@@ -36,11 +36,11 @@ class Status extends Component {
                 <Row>
                     <Col sm="6">
                         <h5 className="text-muted"><div><i className="fa fa-cubes"></i></div>Number of Blocks Mined</h5><hr />
-                        <h5 style={{ color: '#007bff' }}><b>{this.state.length}</b></h5>
+                        <h5><b>{this.state.length}</b></h5>
                     </Col>
                     <Col sm="6"> <br />
                         <h5 className="text-muted"><div>Node Address <a href={endpoint}><i className="fa fa-refresh"></i></a></div></h5><hr />
-                        <h5 style={{ color: '#007bff' }}>{this.state.address}</h5>
+                        <h5>{this.state.address}</h5>
                     </Col >
                 </Row>
                 <br /><br />
