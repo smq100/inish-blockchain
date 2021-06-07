@@ -18,12 +18,26 @@ class Blocks extends Component {
         axios.get(endpoint_chain)
             .then(response => {
                 const chain = response.data.chain;
-                this.setState({chain});
+                this.setState({ chain });
             },
-            error => {
-                console.log(error);
-            }
-        )
+                error => {
+                    console.log(error);
+                }
+            )
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.refresh !== this.props.refresh) {
+            axios.get(endpoint_chain)
+                .then(response => {
+                    const chain = response.data.chain;
+                    this.setState({ chain });
+                },
+                    error => {
+                        console.log(error);
+                    }
+                )
+        }
     }
 
     handleSubmit(event) {

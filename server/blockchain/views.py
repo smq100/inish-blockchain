@@ -37,6 +37,7 @@ def mine_block(request):
     return JsonResponse(response)
 
 def get_chain(request):
+    # print(request)
     if request.method == 'GET':
         response = {'chain': mgr.blockchain.chain_text,
                     'length': len(mgr.blockchain.chain_text)}

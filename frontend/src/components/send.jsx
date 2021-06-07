@@ -53,6 +53,8 @@ class Send extends Component {
             .then(res => {
                 console.log(res);
                 console.log(res.data);
+
+                this.props.onCallback();
             },
                 error => {
                     console.log(error);

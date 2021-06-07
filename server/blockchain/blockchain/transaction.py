@@ -7,11 +7,15 @@ class Transaction:
         self.sender = sender
         self.receiver = receiver
         self.data = data
-        self.hash = self.calculate_hash()
         self.timestamp = datetime.datetime.now()
+        self.hash = self.calculate_hash()
 
     def __str__(self):
-        return vars(self)
+        return str({'sender': self.sender,
+                'receiver': self.receiver,
+                'data': self.data,
+                'timestamp': self.timestamp
+                })
 
     def __repr__(self):
         return '<Transaction object>'
@@ -24,5 +28,5 @@ class Transaction:
                 'hash': self.hash }
 
     def calculate_hash(self):
-        hash = hashlib.sha256(str(self.data).encode()).hexdigest()
+        hash = hashlib.sha256(str(self).encode()).hexdigest()
         return hash

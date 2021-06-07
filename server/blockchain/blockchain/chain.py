@@ -92,20 +92,26 @@ class Blockchain:
             ret = True # Treat genesis block as always valid
 
         elif length == 2:
-            hash = self.chain[1].calculate_merkle_root()
-            ret = (hash == self.chain[1].merkle_root)
+            block = self.chain[1]
+            tx_hashes = [n['hash'] for n in block.transactions]
+            block.calculate_merkle_root(tx_hashes)
+            hash = block.calculate_hash()
+            ret = (hash == self.chain[1].hash)
 
         else:
             previous_block = self.chain[1]
             block_index = 2
             while block_index < length:
                 block = self.chain[block_index]
-                hash = block.calculate_merkle_root()
+                tx_hashes = [n['hash'] for n in block.transactions]
+                block.calculate_merkle_root(tx_hashes)
+
+                hash = block.calculate_hash()
                 if hash != self.chain[block_index].hash:
                     ret = False
                     break # Block Failed
 
-                if block.previous_hash != previous_block.calculate_merkle_root():
+                if block.previous_hash != previous_block.hash:
                     ret = False
                     break # Previous block Failed
 

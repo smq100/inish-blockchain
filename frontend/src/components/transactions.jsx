@@ -12,6 +12,8 @@ class Transactions extends Component {
         this.state = {
             transactions: [],
         }
+
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
@@ -19,11 +21,25 @@ class Transactions extends Component {
             .then(response => {
                 const transactions = response.data.transactions;
                 this.setState({transactions});
-            },
+                },
                 error => {
                     console.log(error);
                 }
             )
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.refresh !== this.props.refresh) {
+            axios.get(endpoint_pending)
+                .then(response => {
+                    const transactions = response.data.transactions;
+                    this.setState({transactions});
+                },
+                    error => {
+                        console.log(error);
+                    }
+                )
+        }
     }
 
     handleSubmit(event) {
@@ -33,18 +49,8 @@ class Transactions extends Component {
             .then(res => {
                 console.log(res);
                 console.log(res.data);
-            },
-                error => {
-                    console.log(error);
-                }
-            )
-    }
 
-    refresh = function() {
-        axios.get(endpoint_pending)
-            .then(response => {
-                const transactions = response.data.transactions;
-                this.setState({transactions});
+                this.props.onCallback();
             },
                 error => {
                     console.log(error);
