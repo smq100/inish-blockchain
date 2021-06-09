@@ -2,41 +2,19 @@ import React, { Component } from 'react';
 import { Container, Form, Button, Col } from 'react-bootstrap';
 import axios from 'axios';
 
-const endpoint_chain = '/get_chain'
 const endpoint_valid = '/is_valid'
 
 class Blocks extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            chain: [],
         }
     }
 
     componentDidMount() {
-        axios.get(endpoint_chain)
-            .then(response => {
-                const chain = response.data.chain;
-                this.setState({ chain });
-            },
-                error => {
-                    console.log(error);
-                }
-            )
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.refresh !== this.props.refresh) {
-            axios.get(endpoint_chain)
-                .then(response => {
-                    const chain = response.data.chain;
-                    this.setState({ chain });
-                },
-                    error => {
-                        console.log(error);
-                    }
-                )
-        }
     }
 
     handleSubmit(event) {
@@ -58,7 +36,7 @@ class Blocks extends Component {
             <Container>
                 <br />
                 <h3 className="text-muted mt-20"><b>Blocks</b></h3>
-                {this.state.chain.slice(0).reverse().map(((b, idx) =>
+                {this.props.chain.slice(0).reverse().map(((b, idx) =>
                     <div key={idx} className="text-start">
                         <hr />
                         <div className="row">
@@ -99,6 +77,7 @@ class Blocks extends Component {
                         </div>
                     </div>
                 ))}
+
                 <Form onSubmit={this.handleSubmit}>
                     <Col>
                         <Button variant="primary mt-4" type="submit">Validate</Button>

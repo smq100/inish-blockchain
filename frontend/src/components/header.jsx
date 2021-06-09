@@ -20,9 +20,7 @@ class Header extends Component {
             <Container>
                 <br />
                 <Navbar bg="light" expand="lg">
-                    <div className="ml-10">
-                    <Navbar.Brand href={endpoint}>React-Bootstrap</Navbar.Brand>
-                    </div>
+                    <Navbar.Brand className="ml-10" href={endpoint}>React-Bootstrap</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">

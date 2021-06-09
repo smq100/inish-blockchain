@@ -2,43 +2,21 @@ import React, { Component } from 'react';
 import { Container, Form, Button, Col } from 'react-bootstrap';
 import axios from 'axios';
 
-const endpoint_pending = '/get_pending'
 const endpoint_mine = '/mine_block'
 
 class Transactions extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            transactions: [],
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
-        axios.get(endpoint_pending)
-            .then(response => {
-                const transactions = response.data.transactions;
-                this.setState({transactions});
-                },
-                error => {
-                    console.log(error);
-                }
-            )
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.refresh !== this.props.refresh) {
-            axios.get(endpoint_pending)
-                .then(response => {
-                    const transactions = response.data.transactions;
-                    this.setState({transactions});
-                },
-                    error => {
-                        console.log(error);
-                    }
-                )
-        }
     }
 
     handleSubmit(event) {
@@ -48,8 +26,6 @@ class Transactions extends Component {
             .then(res => {
                 console.log(res);
                 console.log(res.data);
-
-                this.props.onCallback();
             },
                 error => {
                     console.log(error);
@@ -62,7 +38,7 @@ class Transactions extends Component {
             <Container>
                 <br />
                 <h3 className="text-muted mt-20"><b>Pending Transactions</b></h3>
-                {this.state.transactions.slice(0).reverse().map(((t, idx) =>
+                {this.props.transactions.slice(0).reverse().map(((t, idx) =>
                     <div key={idx} className="text-start">
                         <hr />
                         <div className="row">
@@ -87,6 +63,7 @@ class Transactions extends Component {
                         </div>
                     </div>
                 ))}
+
                 <Form onSubmit={this.handleSubmit}>
                     <Col>
                         <Button variant="primary mt-4" type="submit">Mine</Button>
