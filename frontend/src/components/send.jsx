@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Form, Container, Col, Row, Button } from 'react-bootstrap';
 import axios from 'axios';
 
-const postEndpoint = '/add_transaction'
 const endpoint = '/get_chain'
 
 class Send extends Component {
@@ -44,22 +43,12 @@ class Send extends Component {
     handleSubmit(event) {
         event.preventDefault();
 
-        axios.post(postEndpoint, {
-            "sender": this.state.sender,
-            "receiver": this.state.recipient,
-            "data": this.state.data,
-            "time": this.state.time
-        })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-
-                this.props.onCallback();
-            },
-                error => {
-                    console.log(error);
-                }
-            )
+        this.props.onClick({
+                "sender": this.state.sender,
+                "receiver": this.state.recipient,
+                "data": this.state.data,
+                "time": this.state.time
+            });
     }
 
     render() {

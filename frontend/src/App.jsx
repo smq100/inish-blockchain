@@ -8,8 +8,11 @@ import Send from './components/send'
 import Transactions from './components/transactions'
 import Blocks from './components/blocks'
 
-const endpoint_chain = '/get_chain'
-const endpoint_pending = '/get_pending'
+const endpointChain = '/get_chain'
+const endpointPending = '/get_pending'
+const endpointAdd = '/add_transaction'
+const endpointMine = '/mine_block'
+const endpointvalid = '/is_valid'
 
 class App extends Component {
     constructor(props) {
@@ -19,11 +22,18 @@ class App extends Component {
             chain: []
         };
 
-        // this.sendCallback = this.sendCallback.bind(this);
+        this.DoInsert = this.DoInsert.bind(this);
+        this.DoMine = this.DoMine.bind(this);
+        this.DoValidate = this.DoValidate.bind(this);
     }
 
     componentDidMount() {
-        axios.get(endpoint_pending)
+        this.GetChain();
+        this.GetTransactions();
+    }
+
+    GetTransactions() {
+        axios.get(endpointPending)
             .then(response => {
                 const transactions = response.data.transactions;
                 this.setState({ transactions });
@@ -32,11 +42,54 @@ class App extends Component {
                     console.log(error);
                 }
             )
+    }
 
-        axios.get(endpoint_chain)
+    GetChain() {
+        axios.get(endpointChain)
             .then(response => {
                 const chain = response.data.chain;
                 this.setState({ chain });
+            },
+                error => {
+                    console.log(error);
+                }
+            )
+    }
+
+    DoInsert(data) {
+        axios.post(endpointAdd, data)
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+
+                this.GetTransactions();
+            },
+                error => {
+                    console.log(error);
+                }
+            )
+    }
+
+    DoMine() {
+        axios.get(endpointMine)
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+
+                this.GetTransactions();
+                this.GetChain();
+            },
+                error => {
+                    console.log(error);
+                }
+            )
+    }
+
+    DoValidate() {
+        axios.get(endpointvalid)
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
             },
                 error => {
                     console.log(error);
@@ -51,13 +104,13 @@ class App extends Component {
 
                 <Status />
 
-                <Send onCallback={this.sendCallback} />
+                <Send onClick={this.DoInsert} />
 
                 {this.state.transactions.length > 0 ?
-                    (<Transactions transactions={this.state.transactions}/>) :
+                    (<Transactions transactions={this.state.transactions} onClick={this.DoMine}/>) :
                     (<h3 className="text-muted">No pending transactons</h3>)}
 
-                <Blocks chain={this.state.chain} />
+                <Blocks chain={this.state.chain} onClick={this.DoValidate} />
             </div>
         );
     }

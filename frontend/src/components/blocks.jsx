@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { Container, Form, Button, Col } from 'react-bootstrap';
-import axios from 'axios';
-
-const endpoint_valid = '/is_valid'
 
 class Blocks extends Component {
     constructor(props) {
         super(props);
         this.state = {
         }
+
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
@@ -20,15 +19,7 @@ class Blocks extends Component {
     handleSubmit(event) {
         event.preventDefault();
 
-        axios.get(endpoint_valid)
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            },
-                error => {
-                    console.log(error);
-                }
-            )
+        this.props.onClick();
     }
 
     render() {

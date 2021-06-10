@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import { Container, Form, Button, Col } from 'react-bootstrap';
-import axios from 'axios';
-
-const endpoint_mine = '/mine_block'
 
 class Transactions extends Component {
     constructor(props) {
@@ -22,15 +19,7 @@ class Transactions extends Component {
     handleSubmit(event) {
         event.preventDefault();
 
-        axios.get(endpoint_mine)
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            },
-                error => {
-                    console.log(error);
-                }
-            )
+        this.props.onClick();
     }
 
     render() {
