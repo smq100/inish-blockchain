@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Container, Col, Row, Button } from 'react-bootstrap';
-import axios from 'axios';
 
-const endpoint = '/get_chain'
 
 class Send extends Component {
     constructor(props) {
@@ -10,26 +8,12 @@ class Send extends Component {
         this.state = {
             recipient: '',
             data: 0,
-            time: '',
-            sender: '',
+            time: ''
         }
 
         this.handleRecipient = this.handleRecipient.bind(this);
         this.handleData = this.handleData.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    componentDidMount() {
-        axios.get(endpoint)
-            .then(
-                response => {
-                    const sender = response.data.chain[0].transactions[0].receiver;
-                    this.setState({ sender });
-                },
-                error => {
-                    console.log(error);
-                }
-            )
     }
 
     handleRecipient(event) {
@@ -44,7 +28,7 @@ class Send extends Component {
         event.preventDefault();
 
         this.props.onClick({
-                "sender": this.state.sender,
+                "sender": this.props.address,
                 "receiver": this.state.recipient,
                 "data": this.state.data,
                 "time": this.state.time

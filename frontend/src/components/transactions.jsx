@@ -10,12 +10,6 @@ class Transactions extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentDidMount() {
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-    }
-
     handleSubmit(event) {
         event.preventDefault();
 

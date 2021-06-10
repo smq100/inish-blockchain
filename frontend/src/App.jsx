@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Alert } from 'react-bootstrap';
 import axios from 'axios';
 
 import './App.css';
@@ -19,7 +20,8 @@ class App extends Component {
         super(props);
         this.state = {
             transactions: [],
-            chain: []
+            chain: [],
+            alert: ''
         };
 
         this.DoInsert = this.DoInsert.bind(this);
@@ -28,8 +30,8 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.GetChain();
         this.GetTransactions();
+        this.GetChain();
     }
 
     GetTransactions() {
@@ -48,7 +50,9 @@ class App extends Component {
         axios.get(endpointChain)
             .then(response => {
                 const chain = response.data.chain;
-                this.setState({ chain });
+                const address = response.data.chain[0].transactions[0].receiver;
+                const length = response.data.length;
+                this.setState({ chain, address, length });
             },
                 error => {
                     console.log(error);
@@ -63,6 +67,9 @@ class App extends Component {
                 console.log(res.data);
 
                 this.GetTransactions();
+
+                const alert = 'Success';
+                this.setState({ alert });
             },
                 error => {
                     console.log(error);
@@ -100,15 +107,22 @@ class App extends Component {
     render() {
         return (
             <div className="App">
+                {/* if (this.state.alert != '') {
+                    (<Alert variant="success" fade="false" dismissible>
+                        <Alert.Heading>{this.state.alert}</Alert.Heading>
+                        <p>Blah</p>
+                    </Alert>)
+                } */}
+
                 <Header />
 
-                <Status />
+                <Status address={this.state.address} length={this.state.length} />
 
-                <Send onClick={this.DoInsert} />
+                <Send address={this.state.address} onClick={this.DoInsert} />
 
                 {this.state.transactions.length > 0 ?
-                    (<Transactions transactions={this.state.transactions} onClick={this.DoMine}/>) :
-                    (<h3 className="text-muted">No pending transactons</h3>)}
+                    (<Transactions transactions={this.state.transactions} onClick={this.DoMine} />) :
+                    (<h3 className="text-muted">No pending transactions</h3>)}
 
                 <Blocks chain={this.state.chain} onClick={this.DoValidate} />
             </div>

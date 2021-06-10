@@ -38,7 +38,9 @@ class Block:
                 'timestamp': f'{self.timestamp:%Y-%m-%d %H:%M}'}
 
     def calculate_hash(self):
-        return hashlib.sha256(str(self.merkle_root + str(self)).encode()).hexdigest()
+        inner = hashlib.sha256(str(self.merkle_root + str(self)).encode()).hexdigest()
+        outer = hashlib.sha256(inner.encode()).hexdigest()
+        return outer
 
     def calculate_merkle_root(self, hash_list):
         if len(hash_list) == 0:

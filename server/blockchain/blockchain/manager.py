@@ -2,6 +2,6 @@ import logging
 from blockchain.blockchain.chain import Blockchain
 from blockchain import utils
 
-_logger = utils.get_logger(logging.DEBUG)
+_logger = utils.get_logger(logging.WARNING)
 
 blockchain = Blockchain()
