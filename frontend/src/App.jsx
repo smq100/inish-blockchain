@@ -21,7 +21,8 @@ class App extends Component {
         this.state = {
             transactions: [],
             chain: [],
-            alert: ''
+            alert: '',
+            show: false
         };
 
         this.DoInsert = this.DoInsert.bind(this);
@@ -68,8 +69,7 @@ class App extends Component {
 
                 this.GetTransactions();
 
-                const alert = 'Success';
-                this.setState({ alert });
+                this.setState({ show: true, alert: 'Success' });
             },
                 error => {
                     console.log(error);
@@ -107,14 +107,12 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                {/* if (this.state.alert != '') {
-                    (<Alert variant="success" fade="false" dismissible>
-                        <Alert.Heading>{this.state.alert}</Alert.Heading>
-                        <p>Blah</p>
-                    </Alert>)
-                } */}
-
                 <Header />
+
+                <Alert variant="success" show={this.state.show} dismissible>
+                    <Alert.Heading>{this.state.alert}</Alert.Heading>
+                    <p>Blah</p>
+                </Alert>
 
                 <Status address={this.state.address} length={this.state.length} />
 
