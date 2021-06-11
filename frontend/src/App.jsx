@@ -28,6 +28,7 @@ class App extends Component {
         this.DoInsert = this.DoInsert.bind(this);
         this.DoMine = this.DoMine.bind(this);
         this.DoValidate = this.DoValidate.bind(this);
+        this.DismissMsg = this.DismissMsg.bind(this);
     }
 
     componentDidMount() {
@@ -69,7 +70,7 @@ class App extends Component {
 
                 this.GetTransactions();
 
-                this.setState({ show: true, alert: 'Success' });
+                this.setState({ showTx: true, showMine: false, showVal: false, alert: res.data.message });
             },
                 error => {
                     console.log(error);
@@ -85,6 +86,8 @@ class App extends Component {
 
                 this.GetTransactions();
                 this.GetChain();
+
+                this.setState({ showTx: false, showMine: true, showVal: false, alert: res.data.message });
             },
                 error => {
                     console.log(error);
@@ -97,6 +100,8 @@ class App extends Component {
             .then(res => {
                 console.log(res);
                 console.log(res.data);
+
+                this.setState({ showTx: false, showMine: false, showVal: true, alert: res.data.message });
             },
                 error => {
                     console.log(error);
@@ -104,17 +109,22 @@ class App extends Component {
             )
     }
 
+    DismissMsg() {
+        this.setState({ showTx: false, showMine: false, showVal: false, alert: '' });
+    }
+
     render() {
         return (
             <div className="App">
                 <Header />
 
-                <Alert variant="success" show={this.state.show} dismissible>
-                    <Alert.Heading>{this.state.alert}</Alert.Heading>
-                    <p>Blah</p>
-                </Alert>
-
                 <Status address={this.state.address} length={this.state.length} />
+
+                { this.state.showTx ?
+                <Alert variant="success" fade="false" onClose={this.DismissMsg}>
+                    <Alert.Heading>Successfully Added Transaction</Alert.Heading>
+                    <p>{this.state.alert}</p>
+                </Alert> : ''}
 
                 <Send address={this.state.address} onClick={this.DoInsert} />
 
@@ -122,7 +132,19 @@ class App extends Component {
                     (<Transactions transactions={this.state.transactions} onClick={this.DoMine} />) :
                     (<h3 className="text-muted">No pending transactions</h3>)}
 
+                { this.state.showMine ?
+                <Alert variant="success" fade="false" onClose={this.DismissMsg}>
+                    <Alert.Heading>Successfully Mined Block</Alert.Heading>
+                    <p>{this.state.alert}</p>
+                </Alert> : ''}
+
                 <Blocks chain={this.state.chain} onClick={this.DoValidate} />
+
+                { this.state.showVal ?
+                <Alert variant="success" fade="false" onClose={this.DismissMsg}>
+                    <Alert.Heading>Block Validity Checked</Alert.Heading>
+                    <p>{this.state.alert}</p>
+                </Alert> : ''}
             </div>
         );
     }

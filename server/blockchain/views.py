@@ -24,7 +24,7 @@ def mine_block(request):
     if request.method == 'GET':
         block = mgr.blockchain.mine_and_add()
         if block is not None:
-            response = {'message': 'Congratulations, you just mined a block!',
+            response = {'message': f'Congratulations, you just mined block number {block["index"]}',
                         'index': block['index'],
                         'timestamp': block['timestamp'],
                         'nonce': block['nonce'],
@@ -37,7 +37,6 @@ def mine_block(request):
     return JsonResponse(response)
 
 def get_chain(request):
-    # print(request)
     if request.method == 'GET':
         response = {'chain': mgr.blockchain.chain_text,
                     'length': len(mgr.blockchain.chain_text)}
