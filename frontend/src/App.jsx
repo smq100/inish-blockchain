@@ -28,7 +28,7 @@ class App extends Component {
         this.DoInsert = this.DoInsert.bind(this);
         this.DoMine = this.DoMine.bind(this);
         this.DoValidate = this.DoValidate.bind(this);
-        this.DismissMsg = this.DismissMsg.bind(this);
+        this.DismissMsg = this.DismissAlerts.bind(this);
     }
 
     componentDidMount() {
@@ -109,7 +109,7 @@ class App extends Component {
             )
     }
 
-    DismissMsg() {
+    DismissAlerts() {
         this.setState({ showTx: false, showMine: false, showVal: false, alert: '' });
     }
 
@@ -121,7 +121,7 @@ class App extends Component {
                 <Status address={this.state.address} length={this.state.length} />
 
                 { this.state.showTx ?
-                <Alert variant="success" fade="false" onClose={this.DismissMsg}>
+                <Alert variant="success" fade="false" onClose={this.DismissAlerts}>
                     <Alert.Heading>Successfully Added Transaction</Alert.Heading>
                     <p>{this.state.alert}</p>
                 </Alert> : ''}
@@ -133,7 +133,7 @@ class App extends Component {
                     (<h3 className="text-muted">No pending transactions</h3>)}
 
                 { this.state.showMine ?
-                <Alert variant="success" fade="false" onClose={this.DismissMsg}>
+                <Alert variant="success" fade="false" onClose={this.DismissAlerts}>
                     <Alert.Heading>Successfully Mined Block</Alert.Heading>
                     <p>{this.state.alert}</p>
                 </Alert> : ''}
@@ -141,7 +141,7 @@ class App extends Component {
                 <Blocks chain={this.state.chain} onClick={this.DoValidate} />
 
                 { this.state.showVal ?
-                <Alert variant="success" fade="false" onClose={this.DismissMsg}>
+                <Alert variant="success" fade="false" onClose={this.DismissAlerts}>
                     <Alert.Heading>Block Validity Checked</Alert.Heading>
                     <p>{this.state.alert}</p>
                 </Alert> : ''}

@@ -5,6 +5,8 @@ from django.conf.urls import url
 from blockchain import views
 from blockchain.views import *
 
+admin.autodiscover()
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     url('^$', views.server_root, name='server'),

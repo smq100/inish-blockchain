@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 import { Container, Navbar, Nav, NavDropdown} from 'react-bootstrap';
 
+const endpointAdmin = '/admin'
 const endpoint = '/get_chain'
 
 class Header extends Component {
@@ -20,11 +21,11 @@ class Header extends Component {
             <Container>
                 <br />
                 <Navbar bg="light" expand="lg">
-                    <Navbar.Brand className="ml-10" href={endpoint}>React-Bootstrap</Navbar.Brand>
+                    <Navbar.Brand className="pl-5" href={endpoint}>My Blockchain</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto">
-                            <Nav.Link href="#home">Home</Nav.Link>
+                    <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+                        <Nav>
+                            <Nav.Link href={endpointAdmin}>Admin</Nav.Link>
                             <Nav.Link href="#link">Link</Nav.Link>
                             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>

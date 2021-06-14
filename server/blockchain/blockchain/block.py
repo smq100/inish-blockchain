@@ -35,7 +35,7 @@ class Block:
                 'transactions': self.transactions,
                 'difficulty': self.difficulty,
                 'version': self.version,
-                'timestamp': f'{self.timestamp:%Y-%m-%d %H:%M}'}
+                'timestamp': f'{self.timestamp:%Y-%m-%d %H:%M:%S}'}
 
     def calculate_hash(self):
         inner = hashlib.sha256(str(self.merkle_root + str(self)).encode()).hexdigest()

@@ -24,7 +24,7 @@ class Transaction:
         return {'sender': self.sender,
                 'receiver': self.receiver,
                 'data': self.data,
-                'timestamp': f'{self.timestamp:%Y-%m-%d %H:%M}',
+                'timestamp': f'{self.timestamp:%Y-%m-%d %H:%M:%S}',
                 'hash': self.hash }
 
     def calculate_hash(self):
