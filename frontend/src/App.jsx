@@ -28,7 +28,7 @@ class App extends Component {
         this.DoInsert = this.DoInsert.bind(this);
         this.DoMine = this.DoMine.bind(this);
         this.DoValidate = this.DoValidate.bind(this);
-        this.DismissMsg = this.DismissAlerts.bind(this);
+        this.DismissAlerts = this.DismissAlerts.bind(this);
     }
 
     componentDidMount() {
@@ -63,7 +63,7 @@ class App extends Component {
     }
 
     DoInsert(data) {
-        axios.post(endpointAdd, data)
+    axios.post(endpointAdd, data)
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -114,17 +114,33 @@ class App extends Component {
     }
 
     render() {
+        var message = ''
+        if (this.state.showTx) {
+            message = 'Successfully Added Transaction'
+        }
+        else if (this.state.showMine) {
+            message = 'Successfully Mined Block'
+        }
+        else if (this.state.showVal) {
+            message = 'Block Validity Checked'
+        }
+
+        var alert = ''
+        if (message) {
+            alert =
+                <Alert variant="success" fade="false" onClose={this.DismissAlerts}>
+                    <Alert.Heading>{message}</Alert.Heading>
+                    <p>{this.state.alert}</p>
+                </Alert>
+        }
+
         return (
             <div className="App">
                 <Header />
 
                 <Status address={this.state.address} length={this.state.length} />
 
-                { this.state.showTx ?
-                <Alert variant="success" fade="false" onClose={this.DismissAlerts}>
-                    <Alert.Heading>Successfully Added Transaction</Alert.Heading>
-                    <p>{this.state.alert}</p>
-                </Alert> : ''}
+                {alert}
 
                 <Send address={this.state.address} onClick={this.DoInsert} />
 
@@ -132,19 +148,7 @@ class App extends Component {
                     (<Transactions transactions={this.state.transactions} onClick={this.DoMine} />) :
                     (<h3 className="text-muted">No pending transactions</h3>)}
 
-                { this.state.showMine ?
-                <Alert variant="success" fade="false" onClose={this.DismissAlerts}>
-                    <Alert.Heading>Successfully Mined Block</Alert.Heading>
-                    <p>{this.state.alert}</p>
-                </Alert> : ''}
-
                 <Blocks chain={this.state.chain} onClick={this.DoValidate} />
-
-                { this.state.showVal ?
-                <Alert variant="success" fade="false" onClose={this.DismissAlerts}>
-                    <Alert.Heading>Block Validity Checked</Alert.Heading>
-                    <p>{this.state.alert}</p>
-                </Alert> : ''}
             </div>
         );
     }

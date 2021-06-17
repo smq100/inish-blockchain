@@ -16,7 +16,7 @@ def add_transaction(request):
         if not all(key in received_json for key in transaction_keys):
             return 'Some elements of the transaction are missing', HttpResponse(status=400)
         index = mgr.blockchain.add_transaction(received_json['sender'], received_json['receiver'], received_json['data'], received_json['time'])
-        response = {'message': f'This transaction will be added to Block {index}'}
+        response = {'message': f'This transaction will be added to block {index}'}
 
     return JsonResponse(response)
 
@@ -82,7 +82,7 @@ def connect_node(request):
         for node in nodes:
             mgr.blockchain.add_node(node)
 
-        response = {'message': 'All the nodes are now connected. The Sudocoin Blockchain now contains the following nodes:',
+        response = {'message': 'All the nodes are now connected. The blockchain now contains the following nodes:',
                     'total_nodes': list(mgr.blockchain.nodes)}
 
     return JsonResponse(response)
